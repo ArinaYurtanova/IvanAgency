@@ -50,33 +50,15 @@ namespace IvanAgencyViewAdmin
             }
         }
 
-        private void buttonAdd_Click(object sender, EventArgs e)
-        {
-            var form = Container.Resolve<FormClient>();
-            if (form.ShowDialog() == DialogResult.OK)
-            {
-                LoadData();
-            }
-        }
+     
 
-        private void buttonUpd_Click(object sender, EventArgs e)
-        {
-            if (dataGridView.SelectedRows.Count == 1)
-            {
-                var form = Container.Resolve<FormClient>();
-                form.Id = Convert.ToInt32(dataGridView.SelectedRows[0].Cells[0].Value);
-                if (form.ShowDialog() == DialogResult.OK)
-                {
-                    LoadData();
-                }
-            }
-        }
+   
 
         private void buttonDel_Click(object sender, EventArgs e)
         {
             if (dataGridView.SelectedRows.Count == 1)
             {
-                if (MessageBox.Show("Удалить запись", "Вопрос", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                if (MessageBox.Show("Вы уверены, что хотите заблокировать клиента?", "Вопрос", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
                     int id = Convert.ToInt32(dataGridView.SelectedRows[0].Cells[0].Value);
                     try
@@ -92,10 +74,7 @@ namespace IvanAgencyViewAdmin
             }
         }
 
-        private void buttonRef_Click(object sender, EventArgs e)
-        {
-            LoadData();
-        }
+       
     }
 }
 

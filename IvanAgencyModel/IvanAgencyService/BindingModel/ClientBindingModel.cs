@@ -15,5 +15,6 @@ namespace IvanAgencyService.BindingModel
         public string Password { get; set; }
 
         public string Mail { get; set; }
+        
     }
 }
