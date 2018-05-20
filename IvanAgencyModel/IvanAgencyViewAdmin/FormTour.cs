@@ -80,6 +80,9 @@ namespace IvanAgencyViewAdmin
                 }
                 MessageBox.Show("Сохранение прошло успешно", "Сообщение", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 DialogResult = DialogResult.OK;
+                var form = Container.Resolve<FormMain>();
+                form.ShowDialog();
+                
                 Close();
             }
             catch (Exception ex)
