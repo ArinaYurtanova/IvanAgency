@@ -17,5 +17,9 @@ namespace IvanAgencyService.Interfaces
         void FinishOrder(int id);
 
         void PayOrder(int id);
+
+        void AddBonuses(OrderBindingModel model);
+
+        void AddPunishment(OrderBindingModel model);
     }
 }

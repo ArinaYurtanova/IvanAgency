@@ -19,6 +19,7 @@ namespace IvanAgencyService.Interfaces
         void UpdElement(ClientBindingModel model);
 
         void DelElement(int id);
+
         
     }
 }

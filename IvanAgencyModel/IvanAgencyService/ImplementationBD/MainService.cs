@@ -41,7 +41,8 @@ namespace IvanAgencyService.ImplementationBD
                     Summa = rec.Summa,
                     ClientFIO = rec.Client.ClientFIO,
                     TravelName = rec.Travel.TravelName,
-                    AdminName = rec.Admin.AdminFIO
+                    AdminName = rec.Admin.AdminFIO,
+                    Bonuses = rec.Client.Bonuses
                 })
                 .ToList();
             return result;
@@ -84,6 +85,52 @@ namespace IvanAgencyService.ImplementationBD
             }
             element.Status = StatusOfOrder.Оплачен_частично;
             context.SaveChanges();
+        }
+        public void AddBonuses(OrderBindingModel model)
+        {
+            using (var transaction = context.Database.BeginTransaction())
+            {
+                try
+                {
+
+                    Order element = context.Orders.FirstOrDefault(rec => rec.Id == model.Id);
+                    if (element == null)
+                    {
+                        throw new Exception("Элемент не найден");
+                    }
+                    element.Bonuses = model.Bonuses;
+                    context.SaveChanges();
+                    transaction.Commit();
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
+        }
+        public void AddPunishment(OrderBindingModel model)
+        {
+            using (var transaction = context.Database.BeginTransaction())
+            {
+                try
+                {
+
+                    Order element = context.Orders.FirstOrDefault(rec => rec.Id == model.Id);
+                    if (element == null)
+                    {
+                        throw new Exception("Элемент не найден");
+                    }
+                    element.Punishment = model.Punishment;
+                    context.SaveChanges();
+                    transaction.Commit();
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
         }
     }
 }

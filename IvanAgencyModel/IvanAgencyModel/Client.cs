@@ -21,6 +21,12 @@ namespace IvanAgencyModel
         [Required]
         public string Mail { get; set; }
 
+        [Required]
+        public int Bonuses { get; set; }
+
+        [Required]
+        public int Punishment { get; set; }
+
         [ForeignKey("ClientId")]
         public virtual List<Order> Orders { get; set; }
     }
