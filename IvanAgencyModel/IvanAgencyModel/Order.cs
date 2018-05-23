@@ -31,5 +31,9 @@ namespace IvanAgencyModel
         public virtual Travel Travel { get; set; }
 
         public virtual Admin Admin { get; set; }
+
+        public int Bonuses { get; set; }
+
+        public int Punishment { get; set; }
     }
 }

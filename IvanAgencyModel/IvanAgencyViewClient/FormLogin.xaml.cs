@@ -42,7 +42,7 @@ namespace IvanAgencyViewClient
                 return;
             }
 
-            SqlConnection conn = new SqlConnection(@"Data Source=LAPTOP-6EGDOJMM\SQLEXPRESS;Initial Catalog=IvanSuDatabase;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
+            SqlConnection conn = new SqlConnection(@"Data Source=DESKTOP-J57HGAF\SQLEXPRESS;Initial Catalog=IvanSuDatabase;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
             conn.Open();
             SqlCommand cmd = new SqlCommand("select * from Clients where ClientFIO = '" + textBoxFIO.Text + "' and Password = '" + textBoxPass.Text + "'", conn);          
             SqlDataReader dt;

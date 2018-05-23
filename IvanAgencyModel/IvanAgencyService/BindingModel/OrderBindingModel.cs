@@ -19,5 +19,9 @@ namespace IvanAgencyService.BindingModel
         public int Day { get; set; }
 
         public decimal Summa { get; set; }
+
+        public int Bonuses { get; set; }
+
+        public int Punishment { get; set; }
     }
 }

@@ -31,5 +31,9 @@ namespace IvanAgencyService.ViewModel
         public string DateOfCreate { get; set; }
 
         public string DateOfImplement { get; set; }
+
+        public int Bonuses { get; set; }
+
+        public int Punishment { get; set; }
     }
 }

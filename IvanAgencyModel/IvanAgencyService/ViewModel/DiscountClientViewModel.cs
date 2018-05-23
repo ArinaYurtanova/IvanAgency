@@ -6,16 +6,18 @@ using System.Threading.Tasks;
 
 namespace IvanAgencyService.ViewModel
 {
-    public class ClientViewModel
+    public class DiscountClientViewModel
     {
         public int Id { get; set; }
 
-        public string Password { get; set; }
-
-        public string Mail { get; set; }
+        public int ClientId { get; set; }
 
         public string ClientFIO { get; set; }
 
-        public List<DiscountClientViewModel> DiscountClients { get; set; }
+        public int DiscountId { get; set; }
+
+        public decimal Bonuses { get; set; }
+
+        public decimal Punishment { get; set; }
     }
 }

@@ -32,7 +32,7 @@ namespace IvanAgencyViewAdmin
                     if (textBoxPassword.Text == "123")
                     {
                         
-                        var form = Container.Resolve<Form1>();
+                        var form = Container.Resolve<FormMainAdmin>();
                         form.ShowDialog();
                         
                     }
