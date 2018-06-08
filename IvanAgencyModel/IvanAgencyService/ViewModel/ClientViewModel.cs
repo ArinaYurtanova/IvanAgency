@@ -15,7 +15,5 @@ namespace IvanAgencyService.ViewModel
         public string Mail { get; set; }
 
         public string ClientFIO { get; set; }
-
-        public List<DiscountClientViewModel> DiscountClients { get; set; }
     }
 }

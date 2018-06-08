@@ -24,14 +24,14 @@ namespace IvanAgencyService.ImplementationBD
                 this.context = context;
             }
 
-            public void SaveTourPriceW(ReportBindingModel model)
+            public void SaveTourPriceW(ReportBindingModel model )
             {
-                if (File.Exists(model.FileName))
-                {
-                    File.Delete(model.FileName);
-                }
 
-                var winword = new Microsoft.Office.Interop.Word.Application();
+            if (File.Exists(@"C:\Список туров.doc"))
+            {
+                File.Delete(@"C:\Список туров.doc");
+            }
+            var winword = new Microsoft.Office.Interop.Word.Application();
                 try
                 {
                     object missing = System.Reflection.Missing.Value;
@@ -99,7 +99,7 @@ namespace IvanAgencyService.ImplementationBD
                     range.InsertParagraphAfter();
                     //сохраняем
                     object fileFormat = WdSaveFormat.wdFormatXMLDocument;
-                    document.SaveAs(model.FileName, ref fileFormat, ref missing,
+                    document.SaveAs(@"C:\Список туров.doc", ref fileFormat, ref missing,
                         ref missing, ref missing, ref missing, ref missing,
                         ref missing, ref missing, ref missing, ref missing,
                         ref missing, ref missing, ref missing, ref missing,
@@ -122,9 +122,9 @@ namespace IvanAgencyService.ImplementationBD
             try
             {
                 //или создаем excel-файл, или открываем существующий
-                if (File.Exists(model.FileName))
+                if (File.Exists(@"C:\Список туров.xls"))
                 {
-                    excel.Workbooks.Open(model.FileName, Type.Missing, Type.Missing, Type.Missing,
+                    excel.Workbooks.Open(@"C:\Список туров.xls", Type.Missing, Type.Missing, Type.Missing,
                         Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing,
                         Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing,
                         Type.Missing);
@@ -133,7 +133,7 @@ namespace IvanAgencyService.ImplementationBD
                 {
                     excel.SheetsInNewWorkbook = 1;
                     excel.Workbooks.Add(Type.Missing);
-                    excel.Workbooks[1].SaveAs(model.FileName, XlFileFormat.xlExcel8, Type.Missing,
+                    excel.Workbooks[1].SaveAs(@"C:\Список туров.xls", XlFileFormat.xlExcel8, Type.Missing,
                         Type.Missing, false, false, XlSaveAsAccessMode.xlNoChange, Type.Missing,
                         Type.Missing, Type.Missing, Type.Missing, Type.Missing);
                 }
@@ -195,12 +195,12 @@ namespace IvanAgencyService.ImplementationBD
             }
         }
 
-        public List<ClientOrdersViewModel> GetClientOrders(ReportBindingModel model)
+        public List<ClientOrdersViewModel> GetClientOrders(int id, ReportBindingModel model)
         {
             return context.Orders
                             .Include(rec => rec.Client)
                             .Include(rec => rec.Travel)
-                            .Where(rec => rec.DateOfCreate >= model.DateFrom && rec.DateOfCreate <= model.DateTo)
+                            .Where(rec => rec.DateOfCreate >= model.DateFrom && rec.DateOfCreate <= model.DateTo && rec.Client.Id==id)
                             .Select(rec => new ClientOrdersViewModel
                             {
                                 ClientName = rec.Client.ClientFIO,
@@ -215,7 +215,7 @@ namespace IvanAgencyService.ImplementationBD
                             .ToList();
         }
 
-        public void SaveClientOrders(ReportBindingModel model)
+        public void SaveClientOrders(int id, ReportBindingModel model)
         {
             //из ресрусов получаем шрифт для кирилицы
             if (!File.Exists("TIMCYR.TTF"))
@@ -223,7 +223,7 @@ namespace IvanAgencyService.ImplementationBD
                 File.WriteAllBytes("TIMCYR.TTF", Properties.Resources.TIMCYR);
             }
             //открываем файл для работы
-            FileStream fs = new FileStream(model.FileName, FileMode.OpenOrCreate, FileAccess.Write);
+            FileStream fs = new FileStream(@"C:\Отчет по путешествиям.pdf", FileMode.OpenOrCreate, FileAccess.Write);
             //создаем документ, задаем границы, связываем документ и поток
             iTextSharp.text.Document doc = new iTextSharp.text.Document();
             doc.SetMargins(0.5f, 0.5f, 0.5f, 0.5f);
@@ -286,7 +286,7 @@ namespace IvanAgencyService.ImplementationBD
                 HorizontalAlignment = Element.ALIGN_CENTER
             });
             //заполняем таблицу
-            var list = GetClientOrders(model);
+            var list = GetClientOrders(id, model);
             var fontForCells = new iTextSharp.text.Font(baseFont, 10);
             for (int i = 0; i < list.Count; i++)
             {
@@ -331,7 +331,7 @@ namespace IvanAgencyService.ImplementationBD
         }
 
 
-        public void SaveTravelPriceW(ReportBindingModel model)
+        public void SaveTravelPriceW( ReportBindingModel model)
         {
             if (File.Exists(model.FileName))
             {
@@ -500,7 +500,139 @@ namespace IvanAgencyService.ImplementationBD
                 excel.Quit();
             }
         }
+        public List<ClientOrdersViewModel> GetClientOrders(ReportBindingModel model)
+        {
+            return context.Orders
+                            .Include(rec => rec.Client)
+                            .Include(rec => rec.Travel)
+                            .Where(rec => rec.DateOfCreate >= model.DateFrom && rec.DateOfCreate <= model.DateTo)
+                            .Select(rec => new ClientOrdersViewModel
+                            {
+                                ClientName = rec.Client.ClientFIO,
+                                DateOfCreate = SqlFunctions.DateName("dd", rec.DateOfCreate) + " " +
+                                            SqlFunctions.DateName("mm", rec.DateOfCreate) + " " +
+                                            SqlFunctions.DateName("yyyy", rec.DateOfCreate),
+                                TravelName = rec.Travel.TravelName,
+                                Day = rec.Day,
+                                Summa = rec.Summa,
+                                Status = rec.Status.ToString()
+                            })
+                            .ToList();
+        }
 
+        public void SaveClientOrders(ReportBindingModel model)
+        {
+            //из ресрусов получаем шрифт для кирилицы
+            if (!File.Exists("TIMCYR.TTF"))
+            {
+                File.WriteAllBytes("TIMCYR.TTF", Properties.Resources.TIMCYR);
+            }
+            //открываем файл для работы
+            FileStream fs = new FileStream(model.FileName, FileMode.OpenOrCreate, FileAccess.Write);
+            //создаем документ, задаем границы, связываем документ и поток
+            iTextSharp.text.Document doc = new iTextSharp.text.Document();
+            doc.SetMargins(0.5f, 0.5f, 0.5f, 0.5f);
+            PdfWriter writer = PdfWriter.GetInstance(doc, fs);
 
+            doc.Open();
+            BaseFont baseFont = BaseFont.CreateFont("TIMCYR.TTF", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
+
+            //вставляем заголовок
+            var phraseTitle = new Phrase("Отчет по путешествиям",
+                new iTextSharp.text.Font(baseFont, 16, iTextSharp.text.Font.BOLD));
+            iTextSharp.text.Paragraph paragraph = new iTextSharp.text.Paragraph(phraseTitle)
+            {
+                Alignment = Element.ALIGN_CENTER,
+                SpacingAfter = 12
+            };
+            doc.Add(paragraph);
+
+            var phrasePeriod = new Phrase("c " + model.DateFrom.Value.ToShortDateString() +
+                                    " по " + model.DateTo.Value.ToShortDateString(),
+                                    new iTextSharp.text.Font(baseFont, 14, iTextSharp.text.Font.BOLD));
+            paragraph = new iTextSharp.text.Paragraph(phrasePeriod)
+            {
+                Alignment = Element.ALIGN_CENTER,
+                SpacingAfter = 12
+            };
+            doc.Add(paragraph);
+
+            //вставляем таблицу, задаем количество столбцов, и ширину колонок
+            PdfPTable table = new PdfPTable(6)
+            {
+                TotalWidth = 800F
+            };
+            table.SetTotalWidth(new float[] { 160, 140, 160, 100, 100, 140 });
+            //вставляем шапку
+            PdfPCell cell = new PdfPCell();
+            var fontForCellBold = new iTextSharp.text.Font(baseFont, 10, iTextSharp.text.Font.BOLD);
+            table.AddCell(new PdfPCell(new Phrase("ФИО клиента", fontForCellBold))
+            {
+                HorizontalAlignment = Element.ALIGN_CENTER
+            });
+            table.AddCell(new PdfPCell(new Phrase("Дата создания", fontForCellBold))
+            {
+                HorizontalAlignment = Element.ALIGN_CENTER
+            });
+            table.AddCell(new PdfPCell(new Phrase("Путешествие", fontForCellBold))
+            {
+                HorizontalAlignment = Element.ALIGN_CENTER
+            });
+            table.AddCell(new PdfPCell(new Phrase("Дни", fontForCellBold))
+            {
+                HorizontalAlignment = Element.ALIGN_CENTER
+            });
+            table.AddCell(new PdfPCell(new Phrase("Сумма", fontForCellBold))
+            {
+                HorizontalAlignment = Element.ALIGN_CENTER
+            });
+            table.AddCell(new PdfPCell(new Phrase("Статус", fontForCellBold))
+            {
+                HorizontalAlignment = Element.ALIGN_CENTER
+            });
+            //заполняем таблицу
+            var list = GetClientOrders(model);
+            var fontForCells = new iTextSharp.text.Font(baseFont, 10);
+            for (int i = 0; i < list.Count; i++)
+            {
+                cell = new PdfPCell(new Phrase(list[i].ClientName, fontForCells));
+                table.AddCell(cell);
+                cell = new PdfPCell(new Phrase(list[i].DateOfCreate, fontForCells));
+                table.AddCell(cell);
+                cell = new PdfPCell(new Phrase(list[i].TravelName, fontForCells));
+                table.AddCell(cell);
+                cell = new PdfPCell(new Phrase(list[i].Day.ToString(), fontForCells));
+                cell.HorizontalAlignment = Element.ALIGN_RIGHT;
+                table.AddCell(cell);
+                cell = new PdfPCell(new Phrase(list[i].Summa.ToString(), fontForCells));
+                cell.HorizontalAlignment = Element.ALIGN_RIGHT;
+                table.AddCell(cell);
+                cell = new PdfPCell(new Phrase(list[i].Status, fontForCells));
+                table.AddCell(cell);
+            }
+            //вставляем итого
+            cell = new PdfPCell(new Phrase("Итого:", fontForCellBold))
+            {
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+                Colspan = 4,
+                Border = 0
+            };
+            table.AddCell(cell);
+            cell = new PdfPCell(new Phrase(list.Sum(rec => rec.Summa).ToString(), fontForCellBold))
+            {
+                HorizontalAlignment = Element.ALIGN_RIGHT,
+                Border = 0
+            };
+            table.AddCell(cell);
+            cell = new PdfPCell(new Phrase("", fontForCellBold))
+            {
+                Border = 0
+            };
+            table.AddCell(cell);
+            //вставляем таблицу
+            doc.Add(table);
+
+            doc.Close();
+        }
     }
 }

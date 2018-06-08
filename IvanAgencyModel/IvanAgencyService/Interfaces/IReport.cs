@@ -14,12 +14,18 @@ namespace IvanAgencyService.Interfaces
 
         void SaveTourPriceE(ReportBindingModel model);
 
-        List<ClientOrdersViewModel> GetClientOrders(ReportBindingModel model);
+        List<ClientOrdersViewModel> GetClientOrders(int id, ReportBindingModel model);
 
-        void SaveClientOrders(ReportBindingModel model);
+        void SaveClientOrders(int id, ReportBindingModel model);
 
         void SaveTravelPriceW(ReportBindingModel model);
 
         void SaveTravelPriceE(ReportBindingModel model);
+
+        List<ClientOrdersViewModel> GetClientOrders(ReportBindingModel model);
+
+        void SaveClientOrders(ReportBindingModel model);
+
+
     }
 }

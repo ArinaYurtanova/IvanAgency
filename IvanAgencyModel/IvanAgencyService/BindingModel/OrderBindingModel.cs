@@ -20,8 +20,11 @@ namespace IvanAgencyService.BindingModel
 
         public decimal Summa { get; set; }
 
-        public int Bonuses { get; set; }
+        public decimal SummaOplaty { get; set; }
 
-        public int Punishment { get; set; }
+        public int Bonus { get; set; }
+
+        public string Status { get; set; }
+
     }
 }

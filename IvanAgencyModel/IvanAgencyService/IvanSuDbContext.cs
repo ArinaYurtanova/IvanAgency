@@ -30,8 +30,6 @@ namespace IvanAgencyService
         public virtual DbSet<Travel> Travels { get; set; }
 
         public virtual DbSet<TravelTour> TravelTours { get; set; }
-
-        
         /// <summary>
         /// Перегружаем метод созранения изменений. Если возникла ошибка - очищаем все изменения
         /// </summary>
